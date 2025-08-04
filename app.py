@@ -21,13 +21,18 @@ if st.button("Generate Draft"):
     with st.spinner("Generating content..."):
         try:
             prompt = f"Write a {content_type.lower()} about {topic} in the style of a modern business law firm focused on strategic, plain-English, data-driven advice. Use a professional, confident, and approachable tone. End with a call to action."
-            response = openai.ChatCompletion.create(
-                model="gpt-4",
-                messages=[{"role": "user", "content": prompt}],
-                temperature=0.7,
-                max_tokens=1000
-            )
-            output = response.choices[0].message['content']
+            from openai import OpenAI
+
+client = OpenAI()
+
+response = client.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": prompt}],
+    temperature=0.7,
+    max_tokens=1000
+)
+output = response.choices[0].message.content
+
             st.markdown("### Generated Content")
             st.text_area("Edit the draft below:", value=output, height=400)
         except Exception as e:
